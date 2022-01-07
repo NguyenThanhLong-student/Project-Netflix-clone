@@ -7,7 +7,7 @@ const ListItem = ({ index }) => {
     const [isHovered, setIsHovered] = useState(false);
     return (
         <div className="ListItem"
-            style={{ left: isHovered && index * 225 - 50 + index * 5 }}
+            style={{ left: isHovered && index * 220 - 50 + index * 5 }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
