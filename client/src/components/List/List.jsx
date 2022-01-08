@@ -3,7 +3,7 @@ import ListItem from '../ListItem/ListItem'
 import { useRef, useState } from 'react'
 import './List.scss'
 
-const List = () => {
+const List = ({ list }) => {
     const [slideNumber, setSlideNumber] = useState(0)
     const [leftDisplay, setLeftDisplay] = useState(false);
     const [rightDisplay, setRightDisplay] = useState(true);
@@ -14,7 +14,7 @@ const List = () => {
             setRightDisplay(true);
             setSlideNumber(slideNumber - 1)
             listRef.current.style.transform = `translateX(${distance + 230}px)`
-            if(slideNumber===1) {
+            if (slideNumber === 1) {
                 setLeftDisplay(false);
             }
         }
@@ -22,30 +22,24 @@ const List = () => {
             setLeftDisplay(true)
             setSlideNumber(slideNumber + 1)
             listRef.current.style.transform = `translateX(${distance - 230}px)`
-            if(slideNumber===1) {
+            if (slideNumber === 1) {
                 setRightDisplay(false);
             }
         }
-       
+
     }
     return (
         <div className="list">
-            <span className="listTitle">Coutinue to watch</span>
+            <span className="listTitle">{list.title}</span>
             <div className="wrapper">
-                <ArrowLeft className="left sliderArrow" onClick={() => handleClick("left")} style={{display: !leftDisplay && "none"}} />
+                <ArrowLeft className="left sliderArrow" onClick={() => handleClick("left")} style={{ display: !leftDisplay && "none" }} />
                 <div className="container" ref={listRef}>
-                    <ListItem index={0}/>
-                    <ListItem index={1}/>
-                    <ListItem index={2}/>
-                    <ListItem index={3}/>
-                    <ListItem index={4}/>
-                    <ListItem index={5}/>
-                    <ListItem index={6}/>
-                    <ListItem index={7}/>
-                    <ListItem index={8}/>
-                    <ListItem index={9}/>
+                    {list.content.map((item,index) =>
+                        (<ListItem item={item} index={index} />)
+                    )}
+
                 </div>
-                <ArrowRight className="right sliderArrow" onClick={() => handleClick("right")} style={{display: !rightDisplay && "none"}} />
+                <ArrowRight className="right sliderArrow" onClick={() => handleClick("right")} style={{ display: !rightDisplay && "none" }} />
             </div>
         </div>
     )
