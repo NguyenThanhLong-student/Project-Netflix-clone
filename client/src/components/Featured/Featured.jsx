@@ -1,7 +1,22 @@
 import './Featured.scss';
 import { Info, PlayArrow } from '@material-ui/icons'
+import { useState } from 'react'
+import { useEffect } from 'react';
+import axios from 'axios';
 
 const Featured = ({ type }) => {
+    const [content, setContent] = useState({});
+    useEffect(()=>{
+        const getRandomContent = async () =>{
+            try {
+                const res = await axios.get(`movie/getrandom?type=${type}`);
+                setContent(res.data[0]);
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getRandomContent();
+    },[type]);
     return (
         <div className="featured">
             {
@@ -23,15 +38,15 @@ const Featured = ({ type }) => {
                     </div>
                 )
             }
-            <img src="https://static2.vieon.vn/vieplay-image/carousel_web_v4_ntc/2021/11/08/afeck2kn_1920x1080-doctorstrange-carousel_1920_1080.jpg"
+            <img src={content.image}
                 alt=""
             />
             <div className="info">
-                <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f359881d-6bb2-4391-aba6-779f7084edd4/d9xlip3-9309d0f7-e6b7-4638-88ff-6781fba47cdd.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2YzNTk4ODFkLTZiYjItNDM5MS1hYmE2LTc3OWY3MDg0ZWRkNFwvZDl4bGlwMy05MzA5ZDBmNy1lNmI3LTQ2MzgtODhmZi02NzgxZmJhNDdjZGQucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.V0T3Mpwtu6p3fL__cf7vcwQM7ujmidnvPqjU5xadl-Y"
+                <img src={content.imageTitle}
                     alt=""
                 />
                 <span className="desc">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad possimus molestiae quo reprehenderit tempore, voluptas aspernatur adipisci! Porro nihil, quis doloribus quod cupiditate, ducimus, perspiciatis unde sint recusandae eaque consectetur.
+                    {content.desc}
                 </span>
                 <div className="buttons">
                     <button className="play">

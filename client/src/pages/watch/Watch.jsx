@@ -1,11 +1,10 @@
 import './Watch.scss'
 import { ArrowBackSharp } from '@material-ui/icons'
-import Trailer from '../../public/videos/Trailer.mp4'
 import { Link, useLocation } from "react-router-dom";
 
 const Watch = () => {
     const location = useLocation();
-    console.log(location)
+    const movie = location.state.movie;
     return (
         <div className="watch">
             <Link to="/" className="link">
@@ -14,7 +13,7 @@ const Watch = () => {
                     Home
                 </div>
             </Link>
-            <video className="video" autoPlay progress controls src={Trailer}></video>
+            <video className="video" autoPlay progress controls src={movie.video}></video>
         </div>
     )
 }

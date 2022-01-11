@@ -1,5 +1,4 @@
 import './ListItem.scss'
-import Trailer from '../../public/videos/Trailer.mp4'
 import { Add, PlayArrow, ThumbDown, ThumbUp } from '@material-ui/icons'
 import { useEffect, useState } from 'react'
 import axios from 'axios';
@@ -7,7 +6,7 @@ import { Link } from "react-router-dom";
 
 const ListItem = ({ item, index }) => {
     const [isHovered, setIsHovered] = useState(false);
-    const [movie, setMovie] = useState("");
+    const [movie, setMovie] = useState({});
     useEffect(() => {
         const getMovie = async () => {
             try {
@@ -20,16 +19,19 @@ const ListItem = ({ item, index }) => {
         getMovie();
     }, [item])
     return (
-        <Link to={{ pathname: "/watch", movie: movie}} className="link">
+        <Link to={"/watch"} state = {{
+                movie: movie
+            }}
+         className="link">
             <div className="ListItem"
                 style={{ left: isHovered && index * 220 - 50 + index * 5 }}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
             >
-                <img src="https://newmediarockstars.com/wp-content/uploads/2016/01/Who-Is-Doctor-Strange-Thumbnail-450x279.jpg" alt="" />
+                <img src={movie.imageSmall} alt="" />
                 {isHovered && (
                     <>
-                        <video src={Trailer} autoPlay={true} loop></video>
+                        <video src={movie.trailer} autoPlay={true} loop></video>
                         <div className="itemInfo">
                             <div className="icons">
                                 <PlayArrow className="icon" />

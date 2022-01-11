@@ -1,0 +1,23 @@
+.topBar{
+    margin: 0px 50px;
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    padding:5px;
+    img{
+        height: 40px;
+    }
+    .right{
+        .icon{
+            margin-right:10px;
+            cursor: pointer;
+            height: 30px;
+        }
+        img{
+            border-radius: 50%;
+        }
+    }
+
+
+}
