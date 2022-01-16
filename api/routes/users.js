@@ -10,9 +10,9 @@ router.delete('/delete/:id',verifyToken,deleteUser);
 //Get All User
 router.get('/get',verifyToken,getAllUser);
 //Get User
-router.get('/get/:id',getUser);
+router.get('/get/:id',verifyToken,getUser);
 
 //Get Stats
-router.get('/stats',statsUser);
+router.get('/stats',verifyToken,statsUser);
 
 module.exports = router;

@@ -5,7 +5,6 @@ import {
   Routes,
   Route,
   Navigate,
-  Link,
 } from "react-router-dom";
 
 
@@ -19,7 +18,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route exact path="/" element={ user ? <Home /> : <Navigate to="/register" replace />}/>
+        <Route path="/" element={ user ? <Home /> : <Navigate to="/register" replace />}/>
         {user && <>
           <Route path="/movies" element={<Home type="movies"/>} />
           <Route path="/series" element={<Home type="series"/>} />

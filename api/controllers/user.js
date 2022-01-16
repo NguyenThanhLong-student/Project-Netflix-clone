@@ -51,14 +51,21 @@ const deleteUser = async (req, res, next) => {
 //Read
 const getUser = async (req, res, next) => {
     loggerInfo('Getting user...');
-    try {
-        let user = await User.findById(req.params.id);
-        let { password, ...info } = user._doc;
-        res.status(200).json(info);
-    } catch (error) {
-        loggerError(error);
-        res.status(500).json(err);
+    if (req.params.id === req.user.id || req.user.isAdmin) {
+        try {
+            let user = await User.findById(req.params.id);
+            let { password, ...info } = user._doc;
+            res.status(200).json(info);
+        } catch (error) {
+            loggerError(error);
+            res.status(500).json(err);
+        }
     }
+    else {
+        loggerError("Not accessed!");
+        res.status(403).json("You not authorized");
+    }
+
 }
 
 //Read All user
@@ -67,7 +74,7 @@ const getAllUser = async (req, res, next) => {
     let query = req.query.new;
     if (req.user.isAdmin) {
         try {
-            let user = query ? await User.find().sort({ id: -1 }).limit(10) : await User.find();
+            let user = query ? await User.find().sort({ id: -1 }).limit(6) : await User.find();
             info = user.map(userInfo => {
                 let { password, ...info } = userInfo._doc;
                 return info;
@@ -88,24 +95,31 @@ const getAllUser = async (req, res, next) => {
 
 const statsUser = async (req, res, next) => {
     loggerInfo('Get stats....')
-    try {
-        const data = await User.aggregate([
-            {
-                $project: {
-                    month: { $month: "$createdAt" },
-                }
-            },
-            {
-                $group: {
-                    _id: "$month", total: { $sum: 1 },
+    if (req.user.isAdmin) {
+        try {
+            const data = await User.aggregate([
+                {
+                    $project: {
+                        month: { $month: "$createdAt" },
+                    }
                 },
-            },
-        ])
-        res.status(200).json(data);
-    } catch (error) {
-        loggerError(error);
-        res.status(403).json(error);
+                {
+                    $group: {
+                        _id: "$month", total: { $sum: 1 },
+                    },
+                },
+            ])
+            res.status(200).json(data);
+        } catch (error) {
+            loggerError(error);
+            res.status(403).json(error);
+        }
     }
+    else {
+        loggerError("Not accessed!");
+        res.status(403).json("You not authorized");
+    }
+
 }
 
 
