@@ -40,7 +40,7 @@ const MovieList = () => {
                             <td className="movieListTd movieName">
                                 <img
                                     src={
-                                        movie.image || "https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg"
+                                        movie.imageSmall || "https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg"
                                     }
                                     alt=""
                                     className="widgetSmImg"

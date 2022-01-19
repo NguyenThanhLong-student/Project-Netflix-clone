@@ -10,22 +10,42 @@ let loggerError = logger('Error');
 const updateUser = async (req, res, next) => {
     loggerInfo('Updating user....')
     if (req.params.id === req.user.id || req.user.isAdmin) {
-        if (req.body.password) {
-            req.body.password = await bcrypt.hash(req.body.password, 12)
+        if (req.body.oldPassword) {
+            const user = await User.findById(req.params.id);
+            console.log(req.body.oldPassword, user.password);
+            let isUser = await bcrypt.compare(req.body.oldPassword, user.password);
+            if (isUser) {
+                req.body.Password = await bcrypt.hash(req.body.Password, 12)
+                try {
+                    const updateUser = await User.findByIdAndUpdate(req.params.id, {
+                        $set: { "password": req.body.Password }
+                    }, { new: true })
+                    res.status(200).json(updateUser);
+                } catch (error) {
+                    loggerError(error);
+                    res.status(500).json(err);
+                }
+            }
+            else
+            {
+                res.status(403).json("Wrong password");
+            }
         }
-        try {
-            const updateUser = await User.findByIdAndUpdate(req.params.id, {
-                $set: req.body
-            }, { new: true })
-            res.status(200).json(updateUser);
-        } catch (error) {
-            loggerError(error);
-            res.status(500).json(err);
+        else {
+            try {
+                const updateUser = await User.findByIdAndUpdate(req.params.id, {
+                    $set: req.body
+                }, { new: true })
+                res.status(200).json(updateUser);
+            } catch (error) {
+                loggerError(error);
+                res.status(500).json(err);
+            }
         }
     }
     else {
         loggerError("Not accessed!");
-        res.status(403).json("You only update your accout");
+        res.status(403).json("You only update your account");
     }
 
 }

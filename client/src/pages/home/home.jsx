@@ -26,14 +26,13 @@ const Home = ({type}) => {
         }
         getRandomLists();
     }, [type,genre])
-
     return (
         <div className="home">
             <Navbar />
             <Featured type={type} setGenre ={setGenre} genre={genre}/>
             {
-                lists.map((list) => 
-                    (<List list={list}/>)
+                lists.map((list) =>
+                    (<List key={list._id} list={list}/>)
                 )
             }
         </div>

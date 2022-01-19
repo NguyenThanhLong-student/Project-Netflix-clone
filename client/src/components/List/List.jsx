@@ -34,7 +34,7 @@ const List = ({ list }) => {
                 <ArrowLeft className="left sliderArrow" onClick={() => handleClick("left")} style={{ display: !leftDisplay && "none" }} />
                 <div className="container" ref={listRef}>
                     {list.content.map((item,index) =>
-                        (<ListItem item={item} index={index} />)
+                        (<ListItem key={item._id} item={item} index={index} />)
                     )}
 
                 </div>

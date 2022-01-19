@@ -58,7 +58,7 @@ const NewMovie = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         createMovie(movie,dispatch);
-        navigate("/movies",{ replace: true });
+        navigate("/movies");
     }
 
     return (

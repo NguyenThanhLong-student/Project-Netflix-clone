@@ -24,7 +24,7 @@ const AuthReducer = (state, action) => {
                 isFetching: false,
                 error: false,
             };
-        //register List
+        //register
         case "REGISTER_START":
             return {
                 user: null,
@@ -43,6 +43,7 @@ const AuthReducer = (state, action) => {
                 isFetching: false,
                 error: true,
             };
+
         default: return { ...state };
     }
 }
