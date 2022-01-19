@@ -36,7 +36,7 @@ const SideBar = () => {
                             <span>Movies</span>
                         </div>
                     </Link>
-                    <Link to="/list" className="link">
+                    <Link to="/lists" className="link">
                         <div className="list item">
                             <PlaylistPlay />
                             <span>List</span>

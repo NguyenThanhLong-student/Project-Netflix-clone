@@ -26,7 +26,6 @@ const List = ({ list }) => {
                 setRightDisplay(false);
             }
         }
-
     }
     return (
         <div className="list">
@@ -39,7 +38,7 @@ const List = ({ list }) => {
                     )}
 
                 </div>
-                <ArrowRight className="right sliderArrow" onClick={() => handleClick("right")} style={{ display: !rightDisplay && "none" }} />
+                <ArrowRight className="right sliderArrow" onClick={() => handleClick("right")} style={{ display: (list.content.length<8) ? "none" : !rightDisplay && "none" }} />
             </div>
         </div>
     )

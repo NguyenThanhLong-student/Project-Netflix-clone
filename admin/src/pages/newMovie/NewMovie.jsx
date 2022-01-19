@@ -4,9 +4,11 @@ import {storage} from '../../firebase';
 import {ref, uploadBytesResumable,getDownloadURL  } from "firebase/storage";
 import { createMovie } from '../../context/movieContext/apiCall';
 import { MovieContext } from '../../context/movieContext/MovieContext';
+import { useNavigate } from 'react-router-dom';
 
 const NewMovie = () => {
-    const [movie, setMovie] = useState({});
+    let navigate = useNavigate();
+    const [movie, setMovie] = useState({"isSeries": true});
     const [image, setImage] = useState({});
     const [imageTitle, setImageTitle] = useState({});
     const [imageSmall, setImageSmall] = useState({});
@@ -56,10 +58,12 @@ const NewMovie = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         createMovie(movie,dispatch);
+        navigate("/movies",{ replace: true });
     }
-    console.log(movie)
+
     return (
         <div className="newMovie">
+            <h2>Create Movie</h2>
             <form action="" className="updateForm">
                 <label>Movie Title</label>
                 <input type="text" placeholder="Dr. Stange 2" name="title" onChange={handleChange} />

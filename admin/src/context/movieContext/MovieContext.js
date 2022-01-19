@@ -11,7 +11,6 @@ export const MovieContext = createContext(INITIAL_STATE);
 
 export const MovieContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(MovieReducer, INITIAL_STATE);
-
   return (
     <MovieContext.Provider
       value={{

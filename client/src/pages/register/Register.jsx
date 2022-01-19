@@ -1,22 +1,39 @@
 import './Register.scss'
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
+import { AuthContext } from '../../context/authContext/AuthContext';
+import { Link, useNavigate } from 'react-router-dom';
+import { register } from '../../context/authContext/apiCall';
 
 const Register = () => {
+    let navigate = useNavigate();
     const emailRef = useRef();
-    const passwordRef = useRef();
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [user, setUser] = useState({});
+    const { dispatch } = useContext(AuthContext);
+
+    const handleChange = (e) => {
+        const value = e.target.value;
+        setUser({ ...user, [e.target.name]: value });
+    }
+
     const handleStarted = () => {
         setEmail(emailRef.current.value);
+        setUser({ ...user, "email": emailRef.current.value });
     }
-    const handleFinish = () => {
-        setPassword(passwordRef.current.value);
+    const handleFinish = (e) => {
+        e.preventDefault();
+        register(user, dispatch);
+        alert('Register success!!!');
+        navigate("/login", { replace: true });
     }
+    console.log(user);
     return (
         <div className="register">
             <div className="top">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/2560px-Netflix_2015_logo.svg.png" alt="" />
-                <button className="loginButton">Sign In</button>
+                <Link to="/login">
+                    <button className="loginButton">Sign In</button>
+                </Link>
             </div>
             <div className="container">
                 <h1>Unlimited movies, TV shows, and more.</h1>
@@ -28,8 +45,12 @@ const Register = () => {
                         <button className="registerButton" onClick={handleStarted}>Get Started</button>
                     </div>
                 </> : <>
-                    <form className="input">
-                        <input placeholder="Password" type="password" ref={passwordRef} />
+                    <form className="input2">
+                        <input value={email} name="email" type="text" onChange={handleChange} />
+                        <input placeholder="Name" name="name" type="text" onChange={handleChange} />
+                        <input placeholder="Age" name="age" type="text" onChange={handleChange} />
+                        <input placeholder="Number Phone" name="numberPhone" type="text" onChange={handleChange} />
+                        <input placeholder="Password" name="password" type="password" onChange={handleChange} />
                         <button className="registerButton" onClick={handleFinish}>Start</button>
                     </form>
                 </>

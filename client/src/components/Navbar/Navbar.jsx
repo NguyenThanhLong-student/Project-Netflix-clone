@@ -1,17 +1,20 @@
 import './Navbar.scss';
 import { Search, Notifications, ArrowDropDownSharp } from '@material-ui/icons'
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Link } from "react-router-dom";
+import { logoutfunc } from '../../context/authContext/apiCall';
+import { AuthContext } from '../../context/authContext/AuthContext';
 
 const Navbar = () => {
     let [isScrolled, setIsScrolled] = useState(false);
-
+    const { dispatch } = useContext(AuthContext);
     window.onscroll = () => {
         setIsScrolled(window.pageYOffset === 0 ? false : true);
         return () => (window.onscroll = null);
     }
-    console.log(isScrolled)
-
+    const handleLogout = () => {
+        logoutfunc(dispatch);
+    }
     return (
         <div className={isScrolled ? "navbar scrolled" : "navbar"}>
             <div className="container">
@@ -28,19 +31,20 @@ const Navbar = () => {
                     <Link to="/movies" className="link">
                         <span>Movie</span>
                     </Link>
-                    <span>New and Popular</span>
-                    <span>My List</span>
                 </div>
                 <div className="right">
                     <Search className="icon" />
-                    <span>KID</span>
                     <Notifications className="icon" />
-                    <img src="https://scontent.fsgn8-2.fna.fbcdn.net/v/t39.30808-6/241214347_2971882606409135_4060833953803005321_n.jpg?_nc_cat=110&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=DVhxCVJOL5QAX9TqyU3&_nc_ht=scontent.fsgn8-2.fna&oh=00_AT-DiYuhrZB9-Hyd70aG0mLRiuftkJ6pxPtq23AawDm6AA&oe=61DD47B8" alt="" />
+                    <Link to="/user" className="link">
+                        <img src="https://scontent.fsgn8-2.fna.fbcdn.net/v/t39.30808-6/241214347_2971882606409135_4060833953803005321_n.jpg?_nc_cat=110&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=DVhxCVJOL5QAX9TqyU3&_nc_ht=scontent.fsgn8-2.fna&oh=00_AT-DiYuhrZB9-Hyd70aG0mLRiuftkJ6pxPtq23AawDm6AA&oe=61DD47B8" alt="" />
+                    </Link>
                     <div className="profile">
                         <ArrowDropDownSharp className="icon" />
                         <div className="options">
-                            <span>Setting</span>
-                            <span>Logout</span>
+                            <Link to="/user" className="link">
+                                <span>Setting</span>
+                            </Link>
+                            <span onClick={handleLogout}>Logout</span>
                         </div>
                     </div>
                 </div>

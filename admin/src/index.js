@@ -5,12 +5,15 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthContextProvider } from './context/authContext/AuthContext';
 import { MovieContextProvider } from './context/movieContext/MovieContext';
+import { ListContextProvider } from './context/listContext/ListContext';
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthContextProvider>
       <MovieContextProvider>
-      <App />
+        <ListContextProvider>
+          <App />
+        </ListContextProvider>
       </MovieContextProvider>
     </AuthContextProvider>
   </React.StrictMode>,

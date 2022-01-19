@@ -48,6 +48,7 @@ const getRandomMovie = async (req, res, next) => {
             movies = await Movie.aggregate([
                 {$match: {isSeries: true}},
                 {$sample: {size: 1}},
+                {$sort: { updatedAt: -1 }}
             ])
         }
         else
@@ -55,6 +56,7 @@ const getRandomMovie = async (req, res, next) => {
             movies = await Movie.aggregate([
                 {$match: {isSeries: false}},
                 {$sample: {size: 1}},
+                {$sort: { updatedAt: -1 }}
             ])
         }
         res.status(200).json(movies)
@@ -68,7 +70,7 @@ const getRandomMovie = async (req, res, next) => {
 const getAllMovie = async (req, res, next) => {
     loggerInfo('Get all movie....')
     try {
-        const movie = await Movie.find();
+        const movie = await Movie.find().sort({ updatedAt: 1 });
         res.status(201).json(movie.reverse());
     } catch (error) {
         loggerError(error)

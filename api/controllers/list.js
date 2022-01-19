@@ -38,21 +38,24 @@ const getList = async (req, res, next) => {
             {
                 list = await List.aggregate([
                     {$sample: {size: 10}},
-                    {$match: {type: typeQuery, genre: genreQuery}}
+                    {$match: {type: typeQuery, genre: genreQuery}},
+                    {$sort: { updatedAt: -1 }}
                 ])
             }
             else
             {
                 list = await List.aggregate([
                     {$sample: {size: 10}},
-                    {$match: {type: typeQuery}}
+                    {$match: {type: typeQuery}},
+                    {$sort: { updatedAt: -1 }}
                 ])
             }
         }
         else
         {   
             list = await List.aggregate([
-                {$sample: {size: 10}}
+                {$sample: {size: 10}},
+                {$sort: { updatedAt: -1 }}
             ])
         }
         res.status(201).json(list);

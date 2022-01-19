@@ -14,14 +14,14 @@ import { useContext } from 'react';
 import { AuthContext } from './context/authContext/AuthContext';
 import Movie from './pages/movie/Movie';
 import NewMovie from './pages/newMovie/NewMovie';
+import ListList from './pages/listList/ListList';
 import List from './pages/list/List';
-
+import NewList from './pages/newList/NewList';
 
 function App() {
   const { user } = useContext(AuthContext);
   return (
     <BrowserRouter>
-
       <Routes>
         <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
       </Routes>
@@ -35,7 +35,9 @@ function App() {
               <Route path="/movies" element={<MovieList />} />
               <Route path="/movie/new" element={<NewMovie />} />
               <Route path="/movie/:id" element={<Movie />} />
-              <Route path="/lists" element={<List />} />
+              <Route path="/lists" element={<ListList />} />
+              <Route path="/list/new" element={<NewList />} />
+              <Route path="/list/:id" element={<List />} />
             </Routes>
           </div>
         </>

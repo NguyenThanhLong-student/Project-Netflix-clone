@@ -6,12 +6,19 @@ import Featured from '../../components/Featured/Featured'
 import List from '../../components/List/List'
 
 const Home = ({type}) => {
-    const [genre,setGenre] = useState("");
+    const [genre,setGenre] = useState();
     const [lists,setLists]= useState([]);
     useEffect(() => {
         const getRandomLists = async () => {
             try {
-                const res = await axios.get(`list/get${type ? "?type=" + type : ""}${genre ? "&genre=" + genre : ""}`);
+                let res;
+                if(type)
+                {
+                    res = await axios.get(`list/get${type ? "?type=" + type : ""}${genre ? "&genre=" + genre : ""}`);
+                }
+                else{
+                    res = await axios.get(`list/get`);
+                }
                 setLists(res.data);
             } catch (error) {
                 console.log(error)
@@ -23,7 +30,7 @@ const Home = ({type}) => {
     return (
         <div className="home">
             <Navbar />
-            <Featured type={type}/>
+            <Featured type={type} setGenre ={setGenre} genre={genre}/>
             {
                 lists.map((list) => 
                     (<List list={list}/>)

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useEffect } from 'react';
 import axios from 'axios';
 
-const Featured = ({ type }) => {
+const Featured = ({ type, setGenre, genre }) => {
     const [content, setContent] = useState({});
     useEffect(()=>{
         const getRandomContent = async () =>{
@@ -16,6 +16,20 @@ const Featured = ({ type }) => {
             }
         }
         getRandomContent();
+        const setGenreSelected = () => {
+            try {
+                let selectGenre = document.getElementById("genre");
+                for (let i = 0; i < selectGenre.options.length; i++) {
+                    let opt = selectGenre.options[i];
+                    if(opt.value==genre) {
+                        opt.setAttribute('selected','selected')
+                    }
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        setGenreSelected();
     },[type]);
     return (
         <div className="featured">
@@ -23,17 +37,17 @@ const Featured = ({ type }) => {
                 type && (
                     <div className="category">
                         <span>{type === "movies" ? "Movies" : "Series"}</span>
-                        <select name="genre" id="genre">
-                            <option>Genre</option>
-                            <option value="action">Action</option>
-                            <option value="comedy">Comedy</option>
-                            <option value="crime">Crime</option>
-                            <option value="fantasy">Fantasy</option>
-                            <option value="historical">Historical</option>
-                            <option value="horror">Horror</option>
-                            <option value="romance">Romance</option>
-                            <option value="western">Western</option>
-                            <option value="documentary">Documentary</option>
+                        <select name="genre" id="genre" onChange={(e) => setGenre(e.target.value)}>
+                            <option value="">Genre</option>
+                            <option value="Action">Action</option>
+                            <option value="Comedy">Comedy</option>
+                            <option value="Crime">Crime</option>
+                            <option value="Fantasy">Fantasy</option>
+                            <option value="Historical">Historical</option>
+                            <option value="Horror">Horror</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Western">Western</option>
+                            <option value="Documentary">Documentary</option>
                         </select>
                     </div>
                 )

@@ -9,6 +9,8 @@
         height: 40px;
     }
     .right{
+        align-items: center;
+        display: flex;
         .icon{
             margin-right:10px;
             cursor: pointer;
@@ -16,6 +18,15 @@
         }
         img{
             border-radius: 50%;
+        }
+        .logoutButton{
+            margin-left:10px;
+            background-color: red;
+            border-radius: 5px;
+            padding: 10px 20px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
         }
     }
 
