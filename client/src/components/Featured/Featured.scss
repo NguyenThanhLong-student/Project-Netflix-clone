@@ -42,6 +42,11 @@
             margin: 20px 0px;
             text-align: justify;
         }
+        @media only screen and (max-width: 650px) {
+            .desc{
+                display: none;
+            }
+          }  
         .buttons {
             display: flex;
             button {

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { loginFailure, loginStart, loginSuccess, logout, registerStart, registerSuccess, registerFailure } from './AuthAction';
+import { loginFailure, loginStart, loginSuccess, logout } from './AuthAction';
 
 export const login = async (user, dispatch) => {
   dispatch(loginStart());
@@ -8,7 +8,6 @@ export const login = async (user, dispatch) => {
     dispatch(loginSuccess(res.data));
   } catch (error) {
     dispatch(loginFailure());
-    console.error(error)
   }
 }
 
@@ -20,15 +19,5 @@ export const logoutfunc = async (dispatch) => {
   }
 }
 
-// create User
 
-export const register = async (user, dispatch) => {
-  dispatch(registerStart());
-  try {
-    const res = await axios.post("/auth/register", user);
-    dispatch(registerSuccess(res.data));
-  } catch (err) {
-    dispatch(registerFailure());
-  }
-};
 

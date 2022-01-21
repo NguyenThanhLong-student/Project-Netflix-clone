@@ -1,13 +1,15 @@
 import './Navbar.scss';
 import { Search, Notifications, ArrowDropDownSharp } from '@material-ui/icons'
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom";
 import { logoutfunc } from '../../context/authContext/apiCall';
 import { AuthContext } from '../../context/authContext/AuthContext';
+import axios from 'axios';
 
 const Navbar = () => {
     let [isScrolled, setIsScrolled] = useState(false);
-    const { dispatch } = useContext(AuthContext);
+    const { dispatch,user } = useContext(AuthContext);
+    const [userInfo, SetUserInfo] = useState({});
     window.onscroll = () => {
         setIsScrolled(window.pageYOffset === 0 ? false : true);
         return () => (window.onscroll = null);
@@ -15,6 +17,13 @@ const Navbar = () => {
     const handleLogout = () => {
         logoutfunc(dispatch);
     }
+    useEffect(() => {
+        const getUserInfo = async () => {
+            const res = await axios.get('user/get/' + user._id, { headers: { token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken } });
+            SetUserInfo(res.data);
+        }
+        getUserInfo();
+    }, [user])
     return (
         <div className={isScrolled ? "navbar scrolled" : "navbar"}>
             <div className="container">
@@ -36,7 +45,7 @@ const Navbar = () => {
                     <Search className="icon" />
                     <Notifications className="icon" />
                     <Link to="/user" className="link">
-                        <img src="https://scontent.fsgn8-2.fna.fbcdn.net/v/t39.30808-6/241214347_2971882606409135_4060833953803005321_n.jpg?_nc_cat=110&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=DVhxCVJOL5QAX9TqyU3&_nc_ht=scontent.fsgn8-2.fna&oh=00_AT-DiYuhrZB9-Hyd70aG0mLRiuftkJ6pxPtq23AawDm6AA&oe=61DD47B8" alt="" />
+                        <img src={userInfo.avatar} alt="" />
                     </Link>
                     <div className="profile">
                         <ArrowDropDownSharp className="icon" />

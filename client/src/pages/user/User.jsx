@@ -6,23 +6,30 @@ import Navbar from '../../components/Navbar/Navbar'
 import { AuthContext } from '../../context/authContext/AuthContext';
 import { updateUser } from '../../context/userContext/apiCall';
 import { UserContext } from '../../context/userContext/UserContext';
+import { storage } from '../../firebase';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import './User.scss'
 
 const User = () => {
+    const [avatar, setAvatar] = useState({});
     const { user } = useContext(AuthContext);
     const [userInfo, SetUserInfo] = useState({});
+    const { dispatch } = useContext(UserContext);
+    const [userUpdate, setUserUpdate] = useState(user);
+    const [userUpdatePassword, setUserUpdatePassword] = useState({ "_id": user._id });
+    const [show, setShow] = useState(false);
+    const [uploaded, setUploaded] = useState(0);
+
     useEffect(() => {
         const getUserInfo = async () => {
             const res = await axios.get('user/get/' + user._id, { headers: { token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken } });
             SetUserInfo(res.data);
         }
         getUserInfo();
-    }, [user._id])
-    const { dispatch } = useContext(UserContext);
+    }, [user])
+
     let navigate = useNavigate();
-    const [userUpdate, setUserUpdate] = useState(user);
-    const [userUpdatePassword, setUserUpdatePassword] = useState({"_id": user._id});
-    const [show, setShow] = useState(false);
+
     const handleChange = (e) => {
         const value = e.target.value;
         setUserUpdate({ ...userUpdate, [e.target.name]: value });
@@ -35,6 +42,7 @@ const User = () => {
         e.preventDefault();
         updateUser(userUpdate, dispatch);
         alert("Update sucessfully!");
+        navigate("/", { replace: true });
     }
     const updatePassword = (e) => {
         e.preventDefault();
@@ -54,11 +62,39 @@ const User = () => {
             setShow(true)
         }
     }
+
+    const upload = (items) => {
+        items.forEach(item => {
+            const fileName = new Date().getTime() + '_' + item.label + '_' + item.file.name;
+            const storageRef = ref(storage, `/user/${fileName}`);
+            const uploadTask = uploadBytesResumable(storageRef, item.file);
+            uploadTask.on("state_changes", snapshot => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log("Uploaded " + progress + " %");
+            }, (err) => { console.log(err) }, () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    setUserUpdate((prev) => {
+                        return { ...prev, [item.label]: downloadURL }
+                    })
+                    setUploaded((prev) => prev + 1);
+                })
+            }
+            )
+        })
+    }
+    console.log(userUpdate)
+    const handleUpload = (e) => {
+        e.preventDefault();
+        upload([
+            { file: avatar, label: "avatar" },
+        ])
+    }
+
     return (
         <div className="user">
             <Navbar />
             <div className="userTop">
-                <img src="https://scontent.fsgn8-2.fna.fbcdn.net/v/t39.30808-6/241214347_2971882606409135_4060833953803005321_n.jpg?_nc_cat=110&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=DVhxCVJOL5QAX9TqyU3&_nc_ht=scontent.fsgn8-2.fna&oh=00_AT-DiYuhrZB9-Hyd70aG0mLRiuftkJ6pxPtq23AawDm6AA&oe=61DD47B8" alt="" />
+                <img src={userInfo.avatar} alt="" />
                 <span>{user.name}</span>
             </div>
             <div className="userInfo">
@@ -66,8 +102,14 @@ const User = () => {
                 <input defaultValue={userInfo.name} name="name" type="text" onChange={handleChange} />
                 <input defaultValue={userInfo.age} name="age" type="text" onChange={handleChange} />
                 <input defaultValue={userInfo.numberPhone} name="numberPhone" type="text" onChange={handleChange} />
+                <div className="avatar">
+                    <span className="avatarLabel">New avatar ?</span>
+                    <input name="avatar" type="file" onChange={(e) => setAvatar(e.target.files[0])} className="inputAvatar" />
+                </div>
                 <div className="button">
-                    <button className="registerButton" onClick={updateInfo}>Update Info</button>
+                    {(uploaded === 1) ?
+                        <button className="updateButton" onClick={updateInfo}>Update Info</button> :
+                        <button className="uploadButton" onClick={handleUpload}>Upload image</button>}
                 </div>
             </div>
             <div className="changePasswordButtonDiv" onClick={changePassword}>
@@ -87,7 +129,7 @@ const User = () => {
                     <input placeholder="New password" name="Password" type="password" onChange={handleChangePassword} />
                 </div>
                 <div className="button">
-                    <button className="registerButton" onClick={updatePassword}>Update Password</button>
+                    <button className="updateButton" onClick={updatePassword}>Update Password</button>
                 </div>
             </div>
         </div>

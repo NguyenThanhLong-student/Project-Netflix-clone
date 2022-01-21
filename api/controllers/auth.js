@@ -22,13 +22,15 @@ const register = async (req, res, next) => {
         } = req.body;
         const existedUser = await User.findOne({ email: email });
         if (existedUser)
-            res.send("Email was used !");
+            res.status(401).send("Email was used !");
         else {
             let newUser = new User({
                 email: email,
                 name: name,
                 age: age,
                 numberPhone: numberPhone,
+                isAdmin: false,
+                isVIP: false,
                 password: await bcrypt.hash(password, 12),
                 avatar: avatar,
             });
@@ -61,7 +63,7 @@ const login = async (req, res, next) => {
             let isUser = await bcrypt.compare(password, existedUser.password);
 
             if (!isUser)
-                res.status(401).json('Wrong Password')
+                res.status(401).send('Wrong Password')
             else {
                 let { password, ...info } = existedUser._doc;
                 const accessToken = jwt.sign({id: existedUser._id, isAdmin: existedUser.isAdmin},process.env.secretKey,{expiresIn: "3d"})

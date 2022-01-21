@@ -1,15 +1,13 @@
 import './Register.scss'
 import { useState, useRef, useContext } from "react";
-import { AuthContext } from '../../context/authContext/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import { register } from '../../context/authContext/apiCall';
+import axios from 'axios';
 
 const Register = () => {
     let navigate = useNavigate();
     const emailRef = useRef();
     const [email, setEmail] = useState("");
     const [user, setUser] = useState({});
-    const { dispatch } = useContext(AuthContext);
 
     const handleChange = (e) => {
         const value = e.target.value;
@@ -20,13 +18,16 @@ const Register = () => {
         setEmail(emailRef.current.value);
         setUser({ ...user, "email": emailRef.current.value });
     }
-    const handleFinish = (e) => {
+    const handleFinish = async (e) => {
+        try {
+            await axios.post("/auth/register", user);
+            alert('Register success!!!');
+            navigate("/login", { replace: true });
+          } catch (err) {
+            alert("Fail to register!");
+          }
         e.preventDefault();
-        register(user, dispatch);
-        alert('Register success!!!');
-        navigate("/login", { replace: true });
     }
-    console.log(user);
     return (
         <div className="register">
             <div className="top">
