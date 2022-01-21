@@ -16,6 +16,7 @@
         color: white;
         align-items: center;
         display: flex;
+        z-index: 99;
         select {
             cursor: pointer;
             background-color: var(--main-color);
